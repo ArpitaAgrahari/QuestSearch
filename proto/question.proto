@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package questsearch.v1;
+
+message SearchRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  string type = 4;  // Optional filter by question type
+}
+
+message Block {
+  string text = 1;
+  bool showInOption = 2;
+  bool isAnswer = 3;
+}
+
+message Option {
+  string text = 1;
+  bool isCorrectAnswer = 2;
+}
+
+message Question {
+  string id = 1;
+  string type = 2;
+  string title = 3;
+  string anagramType = 4;
+  repeated Block blocks = 5;
+  repeated Option options = 6;
+  string solution = 7;
+  string siblingId = 8;
+}
+
+message SearchResponse {
+  repeated Question questions = 1;
+  int32 total_count = 2;
+}
+
+service QuestionService {
+  rpc Search(SearchRequest) returns (SearchResponse) {}
+}
