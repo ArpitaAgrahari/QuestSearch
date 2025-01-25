@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react'; 
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { QuestionService } from "../../gen/question_pb";
@@ -8,6 +7,8 @@ import { SearchBar } from './components/search/searchBar/SearchBar';
 import { QuestionTypes } from './components/search/questionTypeFilter/QuestionTypeFilter';
 import { QuestionList } from './components/search/searchResults/SearchResults';
 import Header from './components/layout/header';
+import { motion } from 'framer-motion';
+import './App.css';
 
 const transport = createConnectTransport({
   baseUrl: "http://localhost:4000",
@@ -21,10 +22,28 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [selectedType, setSelectedType] = useState("ALL");
   const [hasSearched, setHasSearched] = useState(false);
+  const [noResults, setNoResults] = useState(false);
+
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setHasSearched(false);
+      setNoResults(false);
+      setQuestions([]);
+    }
+  }, [searchQuery]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!searchQuery.trim()) {
+      setHasSearched(false);
+      setNoResults(false);
+      setQuestions([]);
+      return;
+    }
+    
     setLoading(true);
+    setNoResults(false);
     try {
       const response = await client.search({
         query: searchQuery,
@@ -34,9 +53,11 @@ function App() {
       });
       setQuestions(response.questions);
       setHasSearched(true);
+      setNoResults(response.questions.length === 0);
     } catch (error) {
       console.error('Search failed:', error);
       setQuestions([]);
+      setNoResults(true);
     } finally {
       setLoading(false);
     }
@@ -52,10 +73,11 @@ function App() {
     };
   
     const mappedType = typeMapping[type];
-    setSelectedType(mappedType); // This will now store the backend value
+    setSelectedType(mappedType);
   
-    if (hasSearched) {
+    if (hasSearched && searchQuery.trim()) {
       setLoading(true);
+      setNoResults(false);
       try {
         const response = await client.search({
           query: searchQuery,
@@ -64,24 +86,39 @@ function App() {
           type: mappedType,
         });
         setQuestions(response.questions);
+        setNoResults(response.questions.length === 0);
       } catch (error) {
         console.error('Search failed:', error);
         setQuestions([]);
+        setNoResults(true);
       } finally {
         setLoading(false);
       }
     }
   };
 
+  
+  const handleSearchInputChange = (newQuery: string) => {
+    setSearchQuery(newQuery);
+    if (!newQuery.trim()) {
+      setHasSearched(false);
+      setNoResults(false);
+      setQuestions([]);
+    }
+  };
+
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <div>
-        <Header />
-      </div>
-      <main className="max-w-4xl mx-auto px-4 py-8">
+    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
+      <Header />
+      <motion.main 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-4xl mx-auto px-4 py-8"
+      >
         <SearchBar 
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          setSearchQuery={handleSearchInputChange}
           onSearch={handleSearch}
         />
 
@@ -91,16 +128,33 @@ function App() {
         />
 
         {!hasSearched ? (
-          <div className="text-center text-gray-500">
-            Search for questions to get started
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center mt-8"
+          >
+            <span className="text-xl text-gray-600">Search for questions to get started</span>
+          </motion.div>
+        ) : noResults ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center mt-8"
+          >
+            <span className="text-xl text-gray-600">
+              No results found for "{searchQuery}"
+            </span>
+            <p className="text-gray-500 mt-2">
+              Try adjusting your search terms or filters
+            </p>
+          </motion.div>
         ) : (
           <QuestionList 
             questions={questions}
             loading={loading}
           />
         )}
-      </main>
+      </motion.main>
     </div>
   );
 }
