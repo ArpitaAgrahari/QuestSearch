@@ -1,4 +1,5 @@
 import { Question, Block } from "../../../../../gen/question_pb";
+import './SearchResults.css';
 
 interface QuestionListProps {
   questions: Question[];
@@ -7,7 +8,16 @@ interface QuestionListProps {
 
 export const QuestionList = ({ questions, loading }: QuestionListProps) => {
   if (loading) {
-    return <div className="text-center">Loading...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        minHeight: '200px'
+      }}>
+        <div className="loader"></div>
+      </div>
+    );
   }
 
   const renderQuestionContent = (question: Question) => {
