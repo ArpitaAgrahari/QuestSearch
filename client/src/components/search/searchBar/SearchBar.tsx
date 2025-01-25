@@ -6,21 +6,25 @@ interface SearchBarProps {
   onSearch: (e: React.FormEvent) => void;
 }
 
-export const SearchBar = ({ searchQuery, setSearchQuery, onSearch }: SearchBarProps) => {
+export const SearchBar = ({
+  searchQuery,
+  setSearchQuery,
+  onSearch,
+}: SearchBarProps) => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="text-center mb-8"
     >
-      <motion.h2 
+      <motion.h2
         className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text"
         whileHover={{ scale: 1.05 }}
       >
         Search Questions
       </motion.h2>
-      <motion.p 
+      <motion.p
         className="text-gray-600 mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -29,7 +33,7 @@ export const SearchBar = ({ searchQuery, setSearchQuery, onSearch }: SearchBarPr
         Find questions by title or type
       </motion.p>
       <form onSubmit={onSearch}>
-        <motion.div 
+        <motion.div
           className="relative max-w-2xl mx-auto"
           whileHover={{ scale: 1.01 }}
           transition={{ type: "spring", stiffness: 300 }}
@@ -38,7 +42,7 @@ export const SearchBar = ({ searchQuery, setSearchQuery, onSearch }: SearchBarPr
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-300 hover:shadow-xl"
+            className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6366f1] focus:border-transparent shadow-lg transition-all duration-300 hover:shadow-xl"
             placeholder="Search questions..."
           />
           <motion.svg
