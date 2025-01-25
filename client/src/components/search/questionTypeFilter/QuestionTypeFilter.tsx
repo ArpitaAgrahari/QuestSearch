@@ -4,6 +4,16 @@ interface QuestionTypesProps {
 }
 
 export const QuestionTypes = ({ selectedType, onTypeSelect }: QuestionTypesProps) => {
+
+  
+  const reverseTypeMapping: { [key: string]: string } = {
+    'ALL': 'All Types',
+    'MCQ': 'Multiple Choice',
+    'ANAGRAM': 'Anagram',
+    'READ_ALONG': 'Read Along',
+    'CONTENT_ONLY': 'Content Only'
+  };
+
   const questionTypes = ['All Types', 'Multiple Choice', 'Anagram', 'Read Along', 'Content Only'];
 
   return (
@@ -12,8 +22,8 @@ export const QuestionTypes = ({ selectedType, onTypeSelect }: QuestionTypesProps
         <button
           key={type}
           onClick={() => onTypeSelect(type)}
-          className={`px-4 py-2 rounded-full ${
-            selectedType === type
+          className={`px-4 py-2 rounded-full transition-colors duration-200 ${
+            reverseTypeMapping[selectedType] === type
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
