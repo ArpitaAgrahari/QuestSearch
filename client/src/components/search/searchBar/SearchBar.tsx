@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -6,23 +8,45 @@ interface SearchBarProps {
 
 export const SearchBar = ({ searchQuery, setSearchQuery, onSearch }: SearchBarProps) => {
   return (
-    <div className="text-center mb-8">
-      <h2 className="text-2xl font-bold mb-2">Search Questions</h2>
-      <p className="text-gray-600 mb-4">Find questions by title or type</p>
+    <motion.div 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="text-center mb-8"
+    >
+      <motion.h2 
+        className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text"
+        whileHover={{ scale: 1.05 }}
+      >
+        Search Questions
+      </motion.h2>
+      <motion.p 
+        className="text-gray-600 mb-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        Find questions by title or type
+      </motion.p>
       <form onSubmit={onSearch}>
-        <div className="relative">
+        <motion.div 
+          className="relative max-w-2xl mx-auto"
+          whileHover={{ scale: 1.01 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg transition-all duration-300 hover:shadow-xl"
             placeholder="Search questions..."
           />
-          <svg
-            className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+          <motion.svg
+            className="absolute left-3 top-3.5 h-5 w-5 text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            whileHover={{ scale: 1.2 }}
           >
             <path
               strokeLinecap="round"
@@ -30,9 +54,9 @@ export const SearchBar = ({ searchQuery, setSearchQuery, onSearch }: SearchBarPr
               strokeWidth={2}
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
-          </svg>
-        </div>
+          </motion.svg>
+        </motion.div>
       </form>
-    </div>
+    </motion.div>
   );
 };
