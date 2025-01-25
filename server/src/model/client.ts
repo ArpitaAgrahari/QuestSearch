@@ -9,7 +9,7 @@ const transport = createConnectTransport({
 
 async function main() {
   const client = createClient(QuestionService, transport);
-  const res = await client.search({ query: "I feel happy." });
+  const res = await client.search({ query: "Rearrange" ,type: "ANAGRAM", limit: 10, page:1});
   console.log(res);
 }
 void main();
