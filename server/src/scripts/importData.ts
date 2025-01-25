@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
 
-const mongoURI = 'mongodb+srv://arpitaagrahari004:yhAFKDw31DNQymy4@cluster0.vy0mo.mongodb.net/questSearch';
+const mongoURI = process.env.MONGO_URI as string;
 
 const questionSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
