@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Question, Block } from "../../../../../gen/question_pb";
+import { Skeleton } from "../../layout/skeleton";
 import './SearchResults.css';
 
 interface QuestionListProps {
@@ -9,15 +10,7 @@ interface QuestionListProps {
 
 export const QuestionList = ({ questions, loading }: QuestionListProps) => {
   if (loading) {
-    return (
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex justify-center items-center min-h-[200px]"
-      >
-        <div className="loader"></div>
-      </motion.div>
-    );
+    return <Skeleton />;
   }
 
 
