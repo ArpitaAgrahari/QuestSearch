@@ -1,4 +1,4 @@
-import { Question } from "../../../../../gen/question_pb";
+import { Question, Block } from "../../../../../gen/question_pb";
 
 interface QuestionListProps {
   questions: Question[];
@@ -18,12 +18,19 @@ export const QuestionList = ({ questions, loading }: QuestionListProps) => {
             <div className="text-sm text-gray-500 mt-1">
               Anagram Type: {question.anagramType}
             </div>
-            {question.blocks && (
+            {question.blocks && question.blocks.length > 0 && (
               <div className="mt-2">
                 <div className="text-sm font-medium text-gray-700">Blocks:</div>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {question.blocks.map((block, index) => (
-                    <span key={index} className="px-2 py-1 bg-gray-100 rounded">
+                  {question.blocks.map((block: Block, index: number) => (
+                    <span 
+                      key={index} 
+                      className={`px-2 py-1 rounded ${
+                        block.isAnswer 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
                       {block.text}
                     </span>
                   ))}
