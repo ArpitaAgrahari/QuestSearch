@@ -5,18 +5,22 @@ import Question from "./model/Question";
 export default (router: ConnectRouter) =>
   router.service(QuestionService, {
     async search(req) {
-      const { query, page = 1, limit = 10 } = req;
+      const { query, type = "ALL", page = 1, limit = 10 } = req;
       
       try {
-        const questions: Array<{ _id: any, title: string, type: string, options?: any[] }> = await Question.find({
+        const searchCriteria: any = {
           title: { $regex: query, $options: 'i' }
-        })
+        };
+
+        if (type !== "ALL") {
+          searchCriteria.type = type;
+        }
+
+        const questions: Array<{ _id: any, title: string, type: string, options?: any[] }> = await Question.find(searchCriteria)
           .skip((page - 1) * limit)
           .limit(limit);
 
-        const totalCount = await Question.countDocuments({
-          title: { $regex: query, $options: 'i' }
-        });
+        const totalCount = await Question.countDocuments(searchCriteria);
 
         return {
           questions: questions.map(q => ({
