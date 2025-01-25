@@ -16,7 +16,7 @@ export default (router: ConnectRouter) =>
           searchCriteria.type = type;
         }
 
-        const questions: Array<{ _id: any, title: string, type: string, options?: any[] }> = await Question.find(searchCriteria)
+        const questions: Array<{ _id: any, title: string, type: string, anagramType?: string, blocks?: any[], options?: any[], solution?: string }> = await Question.find(searchCriteria)
           .skip((page - 1) * limit)
           .limit(limit);
 
@@ -27,7 +27,17 @@ export default (router: ConnectRouter) =>
             id: q._id.toString(),
             title: q.title,
             type: q.type,
-            options: q.options || []
+            anagramType: q.anagramType,
+            blocks: q.blocks?.map(block => ({
+              text: block.text,
+              showInOption: block.showInOption,
+              isAnswer: block.isAnswer
+            })),
+            options: q.options?.map(option => ({
+              text: option.text,
+              isCorrectAnswer: option.isCorrectAnswer
+            })),
+            solution: q.solution
           })),
           totalCount
         };
