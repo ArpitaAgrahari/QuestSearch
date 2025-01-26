@@ -27,7 +27,7 @@ async function main() {
     reply.send("QuestSearch API");
   });
 
-  await server.listen({ host: "localhost", port: 4000 });
+  await server.listen({ host: "0.0.0.0", port: 4000 });
   console.log("server is listening at", server.addresses());
 }
 

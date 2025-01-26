@@ -2,9 +2,10 @@
     "name": "questsearch-server",
     "version": "1.0.0",
     "scripts": {
-        "start": "tsx src/server.ts",
+        "start": "node dist/src/server.js",
         "dev": "tsx watch src/server.ts",
-        "import": "tsx src/scripts/importData.ts"
+        "import": "tsx src/scripts/importData.ts",
+        "build": "tsc"
     },
     "keywords": [],
     "author": "",

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Question, Block } from "../../../../../gen/question_pb";
+import { Question, Block } from "../../../../gen/question_pb";
 import { Skeleton } from "../../layout/skeleton";
 import './SearchResults.css';
 

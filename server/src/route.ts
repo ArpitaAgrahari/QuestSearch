@@ -1,5 +1,5 @@
 import type { ConnectRouter } from "@connectrpc/connect";
-import { QuestionService } from "../../gen/question_pb";
+import { QuestionService } from "../gen/question_pb";
 import Question from "./model/Question";
 
 export default (router: ConnectRouter) =>

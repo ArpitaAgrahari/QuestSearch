@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
-import { QuestionService } from "../../gen/question_pb";
+import { QuestionService } from "../gen/question_pb";
 import { SearchBar } from './components/search/searchBar/SearchBar';
-import type { Question } from "../../gen/question_pb";
+import type { Question } from "../gen/question_pb";
 import { QuestionTypes } from './components/search/questionTypeFilter/QuestionTypeFilter';
 import { QuestionList } from './components/search/searchResults/SearchResults';
 import { Pagination } from './components/search/pagination/Pagination';
@@ -11,7 +11,7 @@ import Header from './components/layout/header';
 import './App.css';
 
 const transport = createConnectTransport({
-  baseUrl: "http://localhost:4000",
+  baseUrl: "https://qsbackend-cthjeue6exguaydd.centralindia-01.azurewebsites.net",
 });
 
 const client = createClient(QuestionService, transport);

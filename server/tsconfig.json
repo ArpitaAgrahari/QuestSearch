@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // Modern JavaScript target
+    "module": "CommonJS", // Module system for Node.js
+    "lib": ["ESNext"], // Library to include
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in imports
+    "outDir": "./dist", // Output directory for compiled files
+    "rootDir": "./", // Root directory of the input files
+    "resolveJsonModule": true, // Include modules imported with .json
+    "moduleResolution": "node", // Module resolution strategy
+    "typeRoots": ["./node_modules/@types"], // List of folders to include type definitions
+    "useUnknownInCatchVariables": false // Use 'unknown' for catch variables instead of 'any'
+  },
+  "include": ["src"], // Include the 'src' directory
+  "exclude": ["node_modules"] // Exclude 'node_modules' directory
+}

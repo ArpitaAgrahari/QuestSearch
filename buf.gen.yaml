@@ -1,6 +1,10 @@
 version: v2
 plugins:
   - local: protoc-gen-es
-    out: gen
+    out: client/gen
+    include_imports: true
+    opt: target=ts
+  - local: protoc-gen-es
+    out: server/gen
     include_imports: true
     opt: target=ts

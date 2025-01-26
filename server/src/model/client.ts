@@ -1,5 +1,5 @@
 import { createClient } from "@connectrpc/connect";
-import { QuestionService } from "../../../gen/question_pb";
+import { QuestionService } from "../../gen/question_pb";
 import { createConnectTransport } from "@connectrpc/connect-node";
 
 const transport = createConnectTransport({
