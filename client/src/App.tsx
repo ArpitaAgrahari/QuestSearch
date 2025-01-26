@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useCallback } from 'react';
 import { createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { QuestionService } from "../../gen/question_pb";
-import type { Question } from "../../gen/question_pb";
 import { SearchBar } from './components/search/searchBar/SearchBar';
+import type { Question } from "../../gen/question_pb";
 import { QuestionTypes } from './components/search/questionTypeFilter/QuestionTypeFilter';
 import { QuestionList } from './components/search/searchResults/SearchResults';
 import Header from './components/layout/header';
-import { motion } from 'framer-motion';
 import './App.css';
 
 const transport = createConnectTransport({
@@ -24,16 +23,7 @@ function App() {
   const [hasSearched, setHasSearched] = useState(false);
   const [noResults, setNoResults] = useState(false);
 
-
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setHasSearched(false);
-      setNoResults(false);
-      setQuestions([]);
-    }
-  }, [searchQuery]);
-
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
       setHasSearched(false);
@@ -43,7 +33,6 @@ function App() {
     }
     
     setLoading(true);
-    setNoResults(false);
     try {
       const response = await client.search({
         query: searchQuery,
@@ -61,9 +50,9 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, selectedType]);
 
-  const handleTypeChange = async (type: string) => {
+  const handleTypeChange = useCallback(async (type: string) => {
     const typeMapping: { [key: string]: string } = {
       "All Types": "ALL",
       "Multiple Choice": "MCQ",
@@ -77,7 +66,6 @@ function App() {
   
     if (hasSearched && searchQuery.trim()) {
       setLoading(true);
-      setNoResults(false);
       try {
         const response = await client.search({
           query: searchQuery,
@@ -95,30 +83,15 @@ function App() {
         setLoading(false);
       }
     }
-  };
-
-  
-  const handleSearchInputChange = (newQuery: string) => {
-    setSearchQuery(newQuery);
-    if (!newQuery.trim()) {
-      setHasSearched(false);
-      setNoResults(false);
-      setQuestions([]);
-    }
-  };
+  }, [hasSearched, searchQuery]);
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
+    <div className='min-h-screen'>
       <Header />
-      <motion.main 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="max-w-4xl mx-auto px-4 py-8 mt-24"
-      >
+      <main className="max-w-4xl mx-auto px-4 py-8 mt-24">
         <SearchBar 
           searchQuery={searchQuery}
-          setSearchQuery={handleSearchInputChange}
+          setSearchQuery={setSearchQuery}
           onSearch={handleSearch}
         />
 
@@ -128,33 +101,25 @@ function App() {
         />
 
         {!hasSearched ? (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center mt-8"
-          >
+          <div className="text-center mt-8">
             <span className="text-xl text-gray-600">Search for questions to get started</span>
-          </motion.div>
+          </div>
         ) : noResults ? (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center mt-8"
-          >
+          <div className="text-center mt-8">
             <span className="text-xl text-gray-600">
               No results found for "{searchQuery}"
             </span>
             <p className="text-gray-500 mt-2">
               Try adjusting your search terms or filters
             </p>
-          </motion.div>
+          </div>
         ) : (
           <QuestionList 
             questions={questions}
             loading={loading}
           />
         )}
-      </motion.main>
+      </main>
     </div>
   );
 }
