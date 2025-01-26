@@ -4,7 +4,7 @@ A sophisticated full-stack application designed to revolutionize educational con
 
 ## Folder Structure
 
-
+```
 project-root/
 ├── client/
 │   ├── src/
@@ -38,6 +38,7 @@ project-root/
 │
 ├── docker-compose.yaml
 └── README.md
+```
 
 
 ## Deployed Application
