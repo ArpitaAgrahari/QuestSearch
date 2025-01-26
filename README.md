@@ -53,18 +53,21 @@ To run the project locally, follow these steps:
 
 1. *Clone the Repository:*
 
-   bash
+   ```bash
    git clone https://github.com/ArpitaAgrahari/QuestSearch
+   ```
    
 2. *For runnning backend locally*
 
-    bash
+    ```bash
     npm run start:server
+    ```
 
 3. *For running frontend locally*
 
-    bash
+    ```bash
     npm run start:client
+    ```
    
 
 2. *Using Docker Compose:*
@@ -73,19 +76,19 @@ To run the project locally, follow these steps:
    - Set the MONGO_URI environment variable with your MongoDB connection string.
    - Run the following command to start the services:
 
-     bash
+     ```bash
      docker-compose up --build
-     
+     ```
 
 3. *Running Manually:*
 
    - Create .env files in apps/backend based on .env.example.
    - Navigate to the root directory and run following commands in different terminals:
 
-     bash
+     ```bash
      npm run start:server
      npm run start:client
-     
+     ```
 
 4. *Access the Application:*
 
