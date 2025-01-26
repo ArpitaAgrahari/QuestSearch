@@ -30,7 +30,7 @@ export const SearchBar = ({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        Find questions by title or type
+        Find questions by title
       </motion.p>
       <form onSubmit={onSearch}>
         <motion.div
