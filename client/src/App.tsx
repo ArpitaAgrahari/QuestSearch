@@ -6,6 +6,7 @@ import { SearchBar } from './components/search/searchBar/SearchBar';
 import type { Question } from "../../gen/question_pb";
 import { QuestionTypes } from './components/search/questionTypeFilter/QuestionTypeFilter';
 import { QuestionList } from './components/search/searchResults/SearchResults';
+import { Pagination } from './components/search/pagination/Pagination';
 import Header from './components/layout/header';
 import './App.css';
 
@@ -15,6 +16,8 @@ const transport = createConnectTransport({
 
 const client = createClient(QuestionService, transport);
 
+const ITEMS_PER_PAGE = 10;
+
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -22,25 +25,20 @@ function App() {
   const [selectedType, setSelectedType] = useState("ALL");
   const [hasSearched, setHasSearched] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
-  const handleSearch = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) {
-      setHasSearched(false);
-      setNoResults(false);
-      setQuestions([]);
-      return;
-    }
-    
+  const performSearch = async (page: number, type: string = selectedType) => {
     setLoading(true);
     try {
       const response = await client.search({
         query: searchQuery,
-        page: 1,
-        limit: 10,
-        type: selectedType,
+        page: page,
+        limit: ITEMS_PER_PAGE,
+        type: type,
       });
       setQuestions(response.questions);
+      setTotalCount(response.totalCount);
       setHasSearched(true);
       setNoResults(response.questions.length === 0);
     } catch (error) {
@@ -50,7 +48,21 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, selectedType]);
+  };
+
+  const handleSearch = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      setHasSearched(false);
+      setNoResults(false);
+      setQuestions([]);
+      setCurrentPage(1);
+      return;
+    }
+    
+    setCurrentPage(1);
+    await performSearch(1);
+  }, [searchQuery]);
 
   const handleTypeChange = useCallback(async (type: string) => {
     const typeMapping: { [key: string]: string } = {
@@ -63,27 +75,18 @@ function App() {
   
     const mappedType = typeMapping[type];
     setSelectedType(mappedType);
+    setCurrentPage(1);
   
     if (hasSearched && searchQuery.trim()) {
-      setLoading(true);
-      try {
-        const response = await client.search({
-          query: searchQuery,
-          page: 1,
-          limit: 10,
-          type: mappedType,
-        });
-        setQuestions(response.questions);
-        setNoResults(response.questions.length === 0);
-      } catch (error) {
-        console.error('Search failed:', error);
-        setQuestions([]);
-        setNoResults(true);
-      } finally {
-        setLoading(false);
-      }
+      await performSearch(1, mappedType);
     }
   }, [hasSearched, searchQuery]);
+
+  const handlePageChange = useCallback(async (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    await performSearch(page);
+  }, [searchQuery]);
 
   return (
     <div className='min-h-screen'>
@@ -114,10 +117,18 @@ function App() {
             </p>
           </div>
         ) : (
-          <QuestionList 
-            questions={questions}
-            loading={loading}
-          />
+          <>
+            <QuestionList 
+              questions={questions}
+              loading={loading}
+            />
+            <Pagination 
+              currentPage={currentPage}
+              totalCount={totalCount}
+              pageSize={ITEMS_PER_PAGE}
+              onPageChange={handlePageChange}
+            />
+          </>
         )}
       </main>
     </div>
